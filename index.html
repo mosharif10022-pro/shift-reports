@@ -3,823 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>نظام تقارير تشغيل المصنع – التصنيع والتعبئة</title>
+<title>نظام تقارير تشغيل المصنع</title>
 <style>
 :root{--g:#155b43;--bg:#f4f7f5;--line:#d8e2dc;--txt:#1f2b24;--muted:#65736b;--accent:#e9f3ed}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:Tahoma,Arial,sans-serif;line-height:1.6}
-header{background:var(--g);color:white;padding:18px 15px;text-align:center}.wrap{max-width:920px;margin:auto;padding:0 13px}
-h1{font-size:22px;margin:0}header p{font-size:13px;margin:5px 0 0;opacity:0.9}
-.developer-tag {font-size: 11px; color: #b8e2cb; margin-top: 4px; letter-spacing: 0.5px;}
-
-/* شريط اختيار القسم من أعلى الصفحة */
-.section-switcher{display:flex;justify-content:center;gap:10px;margin:-20px auto 15px;max-width:400px;position:relative;z-index:10}
-.tab-btn{flex:1;padding:12px 16px;font-size:15px;font-weight:bold;border:2px solid var(--g);background:#fff;color:var(--g);border-radius:10px;cursor:pointer;transition:all 0.2s ease;box-shadow:0 4px 6px rgba(0,0,0,0.05)}
-.tab-btn.active{background:var(--g);color:#fff;box-shadow:0 4px 10px rgba(21,91,67,0.3)}
-
-main{padding:10px 0 40px}.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:13px}
+header{background:var(--g);color:#fff;padding:18px 15px;text-align:center}.wrap{max-width:950px;margin:auto;padding:0 13px}
+h1{font-size:22px;margin:0}header p{font-size:13px;margin:5px 0 0}.developer-tag{font-size:11px;color:#b8e2cb;margin-top:4px}
+main{padding:12px 0 40px}.card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px;margin-bottom:13px}
 h2{font-size:17px;color:var(--g);margin:0 0 12px}.sub{font-size:14px;margin:14px 0 8px;color:#2c7a5e;border-bottom:1px solid #e1ebe5;padding-bottom:4px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 label{display:block;font-size:12px;font-weight:bold;margin-bottom:4px}
-input,select,textarea{display:block;width:100%;min-width:0;border:1px solid #cbd8cf;border-radius:8px;padding:10px;font:inherit;font-size:14px;background:white;color:var(--txt)}
+input,select,textarea{display:block;width:100%;min-width:0;border:1px solid #cbd8cf;border-radius:8px;padding:10px;font:inherit;font-size:14px;background:#fff;color:var(--txt)}
 input:focus,select:focus,textarea:focus{outline:2px solid #9bc9ad;border-color:var(--g)}
-input[type=time]{direction:ltr;text-align:right;min-height:44px}
-textarea{min-height:85px;resize:vertical}
-.item{border:1px solid var(--line);border-radius:10px;padding:11px;margin:9px 0;background:#fcfdfc;position:relative}
+input[type=time]{direction:ltr;text-align:right;min-height:44px}textarea{min-height:85px;resize:vertical}
+.item{border:1px solid var(--line);border-radius:10px;padding:11px;margin:9px 0;background:#fcfdfc}
 .itemhead{display:flex;align-items:center;justify-content:space-between;font-weight:bold;font-size:13px;margin-bottom:8px}
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.full{grid-column:1/-1}
 button{border:0;border-radius:9px;padding:11px 13px;font:inherit;font-weight:bold;cursor:pointer}
 .add{background:var(--accent);color:var(--g);width:100%;margin-top:5px}.del{background:#fff0ef;color:#a43d35;padding:5px 9px;font-size:12px}
-.primary{background:var(--g);color:white}.soft{background:#e9efeb;color:var(--g)}
+.primary{background:var(--g);color:#fff}.soft{background:#e9efeb;color:var(--g)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
 .note{font-size:12px;color:var(--muted);margin:6px 0}
 #result{min-height:320px;white-space:pre-wrap;background:#f9fbf9;font-family:monospace;font-size:13px;direction:rtl}
-
-/* قائمة الحضور المباشرة */
-.checkbox-grid {display:grid;grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));gap:8px;margin-top:8px;}
-.checkbox-item {display:flex;align-items:center;gap:6px;background:#f8faf8;padding:8px 10px;border:1px solid #d8e2dc;border-radius:7px;font-size:13px;cursor:pointer;}
-.checkbox-item input[type="checkbox"] {width:18px;height:18px;accent-color:var(--g);cursor:pointer;}
-
-.section-block {display:none;}
-.section-block.active-block {display:block;}
-
+.section-switcher{display:flex;justify-content:center;gap:10px;margin:-18px auto 12px;max-width:420px;position:relative;z-index:2;padding:0 12px}
+.tab-btn{flex:1;padding:12px 10px;font-size:15px;font-weight:bold;border:2px solid var(--g);background:#fff;color:var(--g);border-radius:10px;cursor:pointer}
+.tab-btn.active{background:var(--g);color:#fff}
+.inner-tabs{display:flex;gap:7px;overflow-x:auto;padding:5px 1px 12px;margin-bottom:8px;scrollbar-width:thin}
+.inner-tab{white-space:nowrap;background:#e8efea;color:#315c48;border:1px solid #d2e0d7;padding:9px 13px;font-size:13px}
+.inner-tab.active{background:#155b43;color:white;border-color:#155b43}
+.sub-inner-tabs{margin:4px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.sub-inner-tabs .inner-tab{background:#f2f6f3;color:#315c48}.sub-inner-tabs .inner-tab.active{background:#dcebe2;color:#164f3a;border-color:#9dbbaa}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.checkbox-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-top:8px}
+.checkbox-item{display:flex;align-items:center;gap:6px;background:#f8faf8;padding:8px 10px;border:1px solid #d8e2dc;border-radius:7px;font-size:13px;cursor:pointer}
+.checkbox-item input{width:18px;height:18px;accent-color:var(--g)}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:12px}
-@media(max-width:560px){.grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.fields{grid-template-columns:1fr}.checkbox-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.grid,.fields,.actions{grid-template-columns:1fr}.checkbox-grid{grid-template-columns:1fr}.section-switcher{margin-top:-12px}}
 </style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <h1>نظام إعداد تقارير تشغيل المصنع</h1>
-    <p>إدخال سريع · قوائم منفصلة للتصنيع والتعبئة · واتساب جاهز</p>
-    <div class="developer-tag">إعداد م/ محمد شريف</div>
-  </div>
-</header>
-
-<!-- تبويب اختيار القسم من أعلى الصفحة -->
+<header><div class="wrap"><h1>نظام إعداد تقارير تشغيل المصنع</h1><p>إدخال منظم · تبويبات سهلة · تقرير جاهز للواتساب</p><div class="developer-tag">إعداد م/ محمد شريف</div></div></header>
 <div class="section-switcher">
-  <button type="button" class="tab-btn active" id="tabManufacturing" onclick="switchSection('manufacturing')">⚙️ قسم التصنيع</button>
-  <button type="button" class="tab-btn" id="tabPackaging" onclick="switchSection('packaging')">📦 قسم التعبئة</button>
+<button type="button" class="tab-btn active" id="tabManufacturing" onclick="switchSection('manufacturing')">⚙️ قسم التصنيع</button>
+<button type="button" class="tab-btn" id="tabPackaging" onclick="switchSection('packaging')">📦 قسم التعبئة</button>
+</div>
+<main class="wrap">
+<section class="card">
+<h2>بيانات اليوم والوردية</h2>
+<div class="grid">
+<div><label for="day">تاريخ يوم الإنتاج</label><input id="day" type="date"></div>
+<div><label for="shift">الوردية</label><select id="shift"><option value="الأولى">الوردية الأولى</option><option value="الثانية">الوردية الثانية</option><option value="الثالثة">الوردية الثالثة</option></select></div>
+<div><label for="engineer">مسؤول / مهندس الوردية</label><input id="engineer" list="engineersList" placeholder="اختر المهندس أو اكتبه"></div>
+<div><label for="currentSection">القسم الحالي</label><select id="currentSection" disabled><option value="التصنيع">قسم التصنيع</option><option value="التعبئة">قسم التعبئة</option></select></div>
+</div><p class="note">اختر القسم من أعلى الصفحة، ثم تنقل بين التبويبات الخاصة به.</p>
+</section>
+
+<div id="manufacturingBlock">
+<nav class="inner-tabs" id="mTabs">
+<button class="inner-tab active" data-panel="m_lines">الخطوط والأنفاق</button><button class="inner-tab" data-panel="m_production">الاستلام والتصنيع</button><button class="inner-tab" data-panel="m_faults">الأعطال</button><button class="inner-tab" data-panel="m_stock">الخام المتبقي</button><button class="inner-tab" data-panel="m_wash">الغسيل والجودة</button><button class="inner-tab" data-panel="m_attendance">الحضور</button>
+</nav>
+<section class="tab-panel active" id="m_lines"><div class="card"><h2>حالة الخطوط والأنفاق عند الاستلام والتسليم</h2><div id="m_lineRows"></div><button class="add" onclick="addRow('m_lineRows','m_line')">＋ إضافة خط / نفق</button></div></section>
+<section class="tab-panel" id="m_production"><div class="card"><h2>الاستلام والتصنيع والتجهيز</h2>
+<nav class="inner-tabs sub-inner-tabs" id="mProductionTabs">
+<button type="button" class="inner-tab active" data-panel="m_receivingSub">الخامات المستلمة</button>
+<button type="button" class="inner-tab" data-panel="m_madeSub">الإنتاج / التصنيع</button>
+<button type="button" class="inner-tab" data-panel="m_prepSub">التدريج / النقع / التجهيز</button>
+</nav>
+<section class="tab-panel active" id="m_receivingSub"><h3 class="sub">الخامات المستلمة</h3><div id="m_receivedRows"></div><button class="add" onclick="addRow('m_receivedRows','m_quantity')">＋ إضافة خامة مستلمة</button></section>
+<section class="tab-panel" id="m_madeSub"><h3 class="sub">التصنيع / الإنتاج</h3><div id="m_madeRows"></div><button class="add" onclick="addRow('m_madeRows','m_quantity')">＋ إضافة منتج مُصنّع</button></section>
+<section class="tab-panel" id="m_prepSub"><h3 class="sub">التدريج والتجهيز ونقع البسلة</h3><div id="m_prepRows"></div><button class="add" onclick="addRow('m_prepRows','m_prep')">＋ إضافة عملية تجهيز / نقع</button></section>
+</div></section>
+<section class="tab-panel" id="m_faults"><div class="card"><h2>الأعطال والتوقفات</h2><div id="m_faultRows"></div><button class="add" onclick="addRow('m_faultRows','m_fault')">＋ إضافة عطل / توقف</button></div></section>
+<section class="tab-panel" id="m_stock"><div class="card"><h2>الخام المتبقي وموقعه</h2><div id="m_stockRows"></div><button class="add" onclick="addRow('m_stockRows','m_stock')">＋ إضافة رصيد خام متبقٍ</button></div></section>
+<section class="tab-panel" id="m_wash"><div class="card"><h2>الغسيل والتسليم للجودة</h2><div id="m_washRows"></div><button class="add" onclick="addRow('m_washRows','m_wash')">＋ إضافة خط تم غسيله / تسليمه</button><div class="grid" style="margin-top:12px"><div><label for="m_quality">حالة التسليم للجودة العامة</label><select id="m_quality"><option value="">غير محدد</option><option>تم التسليم للجودة</option><option>بانتظار استلام الجودة</option><option>توجد ملاحظات من الجودة</option><option>لم يتم التسليم</option></select></div><div><label for="m_notes">ملاحظات عامة</label><textarea id="m_notes" placeholder="ملاحظات أو تعليمات للوردية التالية..."></textarea></div></div></div></section>
+<section class="tab-panel" id="m_attendance"><div class="card"><h2>حضور وردية التصنيع</h2><div id="m_attendanceContainer" class="checkbox-grid"></div><label style="margin-top:15px" for="m_customAttendees">إضافة أسماء أخرى</label><textarea id="m_customAttendees" placeholder="اكتب الأسماء وافصل بينها بفاصلة أو سطر جديد"></textarea></div></section>
 </div>
 
-<main class="wrap">
+<div id="packagingBlock" style="display:none">
+<nav class="inner-tabs" id="pTabs">
+<button class="inner-tab active" data-panel="p_orders">تشغيل الماكينات وأوامر الشغل</button><button class="inner-tab" data-panel="p_faults">الأعطال والتوقفات</button><button class="inner-tab" data-panel="p_wash">الغسيل والتجهيز</button><button class="inner-tab" data-panel="p_labor">العمال وحركتهم</button><button class="inner-tab" data-panel="p_attendance">الحضور</button>
+</nav>
+<section class="tab-panel active" id="p_orders"><div class="card"><h2>خطوط التعبئة وأوامر التشغيل</h2><p class="note">أضف سجلًا مستقلًا لكل منتج أو أمر شغل؛ يمكن تكرار الماكينة لإضافة أكثر من أمر عليها.</p><div id="p_lineRows"></div><button class="add" onclick="addRow('p_lineRows','p_line')">＋ إضافة منتج / أمر شغل</button></div></section>
+<section class="tab-panel" id="p_faults"><div class="card"><h2>أعطال وتوقفات التعبئة</h2><div id="p_faultRows"></div><button class="add" onclick="addRow('p_faultRows','p_fault')">＋ إضافة عطل / توقف</button></div></section>
+<section class="tab-panel" id="p_wash"><div class="card"><h2>غسيل وتجهيز ماكينات التعبئة</h2><div id="p_washRows"></div><button class="add" onclick="addRow('p_washRows','p_wash')">＋ إضافة عملية غسيل / تعقيم</button></div></section>
+<section class="tab-panel" id="p_labor"><div class="card"><h2>إحصائيات وحركة العمالة بالوردية</h2><div class="grid"><div><label for="p_startWorkers">عدد العمال بداية الوردية</label><input id="p_startWorkers" type="number" min="0"></div><div><label for="p_nightWorkers">عدد عمال السهرة</label><input id="p_nightWorkers" type="number" min="0"></div><div><label for="p_handWorkers">عمال (هاند + مستلزمات + تسجيل)</label><input id="p_handWorkers" placeholder="مثال: 1 عامل"></div><div><label for="p_metalWorkers">عمال التمرا / الميتال</label><input id="p_metalWorkers" placeholder="مثال: 3 عمال للميتال"></div></div><label style="margin-top:12px" for="p_laborNotes">تفاصيل وتوقيتات حركة العمالة</label><textarea id="p_laborNotes" placeholder="مثال: دخول 5 عمال الساعة 9:40م، ودخول 7 عمال الساعة 10:55م"></textarea></div></section>
+<section class="tab-panel" id="p_attendance"><div class="card"><h2>حضور وردية التعبئة</h2><div id="p_attendanceContainer" class="checkbox-grid"></div><label style="margin-top:15px" for="p_customAttendees">إضافة أسماء أخرى</label><textarea id="p_customAttendees" placeholder="اكتب الأسماء وافصل بينها بفاصلة أو سطر جديد"></textarea></div></section>
+</div>
 
-  <!-- ==================== بيانات اليوم والوردية العامة ==================== -->
-  <section class="card">
-    <h2>بيانات اليوم والوردية</h2>
-    <div class="grid">
-      <div><label for="day">تاريخ يوم الإنتاج</label><input id="day" type="date"></div>
-      <div><label for="shift">الوردية</label>
-        <select id="shift">
-          <option value="الأولى">الورديه الأولى</option>
-          <option value="الثانية">الورديه الثانية</option>
-          <option value="الثالثة">الورديه الثالثة</option>
-        </select>
-      </div>
-      <div>
-        <label for="engineer">مسؤول / مهندس الوردية</label>
-        <input id="engineer" list="engineersList" placeholder="اختر المهندس أو اكتبه">
-      </div>
-      <div><label for="currentSection">القسم الحالي</label>
-        <select id="currentSection" disabled>
-          <option value="التصنيع">قسم التصنيع</option>
-          <option value="التعبئة">قسم التعبئة</option>
-        </select>
-      </div>
-    </div>
-    <p class="note">سيتم تنسيق التقرير تلقائيًا بالرموز والهيكل المعتمد لكل قسم.</p>
-  </section>
-
-
-  <!-- ==================================================================== -->
-  <!--                      1. نموذج قسم التصنيع                           -->
-  <!-- ==================================================================== -->
-  <div id="manufacturingBlock" class="section-block active-block">
-    <section class="card">
-      <h2>حالة الخطوط والأنفاق عند الاستلام والتسليم</h2>
-      <div id="m_lineRows"></div>
-      <button type="button" class="add" onclick="addRow('m_lineRows','m_line')">＋ إضافة خط / نفق</button>
-    </section>
-
-    <section class="card">
-      <h2>الاستلام والتصنيع والتجهيز</h2>
-      <h3 class="sub">الخامات المستلمة</h3>
-      <div id="m_receivedRows"></div>
-      <button type="button" class="add" onclick="addRow('m_receivedRows','m_quantity')">＋ إضافة خامة مستلمة</button>
-
-      <h3 class="sub">التصنيع / الإنتاج</h3>
-      <div id="m_madeRows"></div>
-      <button type="button" class="add" onclick="addRow('m_madeRows','m_quantity')">＋ إضافة منتج مُصنّع</button>
-
-      <h3 class="sub">التدريج والتجهيز ونقع البسلة</h3>
-      <div id="m_prepRows"></div>
-      <button type="button" class="add" onclick="addRow('m_prepRows','m_prep')">＋ إضافة عملية تجهيز / نقع</button>
-    </section>
-
-    <section class="card">
-      <h2>الأعطال والتوقفات</h2>
-      <div id="m_faultRows"></div>
-      <button type="button" class="add" onclick="addRow('m_faultRows','m_fault')">＋ إضافة عطل / توقف</button>
-    </section>
-
-    <section class="card">
-      <h2>الخام المتبقي وموقعه</h2>
-      <div id="m_stockRows"></div>
-      <button type="button" class="add" onclick="addRow('m_stockRows','m_stock')">＋ إضافة رصيد خام متبقٍ</button>
-    </section>
-
-    <section class="card">
-      <h2>الغسيل والتسليم للجودة</h2>
-      <div id="m_washRows"></div>
-      <button type="button" class="add" onclick="addRow('m_washRows','m_wash')">＋ إضافة خط تم غسيله / تسليمه</button>
-      <div class="grid" style="margin-top:12px">
-        <div>
-          <label for="m_quality">حالة التسليم للجودة العامة</label>
-          <select id="m_quality">
-            <option value="">غير محدد</option>
-            <option>تم التسليم للجودة</option>
-            <option>بانتظار استلام الجودة</option>
-            <option>توجد ملاحظات من الجودة</option>
-            <option>لم يتم التسليم</option>
-          </select>
-        </div>
-        <div>
-          <label for="m_notes">ملاحظات عامة</label>
-          <textarea id="m_notes" placeholder="ملاحظات أو تعليمات للوردية التالية..."></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>حضور وردية التصنيع</h2>
-      <p class="note">اختر الحاضرين مباشرة:</p>
-      <div id="m_attendanceContainer" class="checkbox-grid"></div>
-      <div style="margin-top:15px; border-top:1px dashed var(--line); padding-top:12px;">
-        <label for="m_customAttendees">إضافة أسماء أخرى غير موجودة بالقائمة:</label>
-        <textarea id="m_customAttendees" placeholder="مثال: م/ محمود حسن, ا/ سامح مرسي"></textarea>
-      </div>
-    </section>
-  </div>
-
-
-  <!-- ==================================================================== -->
-  <!--                      2. نموذج قسم التعبئة                           -->
-  <!-- ==================================================================== -->
-  <div id="packagingBlock" class="section-block">
-    <section class="card">
-      <h2>أوامر الشغل وخطوط التعبئة</h2>
-      <p class="note">أضف خطوط التعبئة وأوامر الشغل الخاصة بالتعبئة</p>
-      <div id="p_lineRows"></div>
-      <button type="button" class="add" onclick="addRow('p_lineRows','p_line')">＋ إضافة خط تعبئة / أمر شغل</button>
-    </section>
-
-    <section class="card">
-      <h2>أعطال وتوقفات التعبئة</h2>
-      <div id="p_faultRows"></div>
-      <button type="button" class="add" onclick="addRow('p_faultRows','p_fault')">＋ إضافة عطل / توقف تعبئة</button>
-    </section>
-
-    <section class="card">
-      <h2>غسيل وتجهيز ماكينات التعبئة</h2>
-      <div id="p_washRows"></div>
-      <button type="button" class="add" onclick="addRow('p_washRows','p_wash')">＋ إضافة عملية غسيل / تعقيم ماكينة</button>
-    </section>
-
-    <section class="card">
-      <h2>إحصائيات وحركة العمالة بالوردية</h2>
-      <div class="grid">
-        <div><label for="p_startWorkers">عدد العمال بداية الوردية</label><input id="p_startWorkers" type="number" placeholder="مثال: 16"></div>
-        <div><label for="p_nightWorkers">عدد عمال السهرة</label><input id="p_nightWorkers" type="number" placeholder="مثال: 49"></div>
-        <div><label for="p_handWorkers">عمال (هاند + مستلزمات + تسجيل)</label><input id="p_handWorkers" type="text" placeholder="مثال: 1 عامل أو تفاصيل"></div>
-        <div><label for="p_metalWorkers">عمال التمرا / الميتال</label><input id="p_metalWorkers" type="text" placeholder="مثال: 3 عمال للميتال"></div>
-      </div>
-      <div style="margin-top:10px;">
-        <label for="p_laborNotes">تفاصيل وتوقيتات حركة العمالة خلال الوردية</label>
-        <textarea id="p_laborNotes" placeholder="مثال: تم دخول 5 عمال من على الخط الساعة 9:40م&#10;تم دخول 7 عمال الساعة 10:55م"></textarea>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>حضور وردية التعبئة</h2>
-      <p class="note">اختر الحاضرين من المشرفين والمهندسين والعمال:</p>
-      <div id="p_attendanceContainer" class="checkbox-grid"></div>
-      <div style="margin-top:15px; border-top:1px dashed var(--line); padding-top:12px;">
-        <label for="p_customAttendees">إضافة أسماء أخرى لحضور التعبئة:</label>
-        <textarea id="p_customAttendees" placeholder="مثال: أ/ عمران, أ/ يوسف, أ/ حمدي"></textarea>
-      </div>
-    </section>
-  </div>
-
-
-  <!-- ==================== المعاينة والإرسال ==================== -->
-  <section class="card">
-    <h2>إنشاء التقرير والمعاينة النهائية</h2>
-    <div class="actions">
-      <button type="button" class="primary" id="generate">إنشاء / تحديث التقرير</button>
-      <button type="button" class="soft" id="reset">مسح النموذج الحالي</button>
-    </div>
-    <label for="result" style="margin-top:12px">معاينة النص المنسق (جاهز للنسخ والواتساب)</label>
-    <textarea id="result" readonly placeholder="اضغط على زر (إنشاء التقرير) لعرض النص النهائي هنا..."></textarea>
-    <div class="actions">
-      <button type="button" class="primary" id="copy">نسخ التقرير</button>
-      <button type="button" class="soft" id="share">مشاركة عبر واتساب</button>
-    </div>
-  </section>
-
-  <footer>إعداد م/ محمد شريف · يعمل محليًا بالكامل دون الحاجة للاتصال بالإنترنت.</footer>
+<section class="card"><h2>التقرير النهائي</h2><div class="actions"><button type="button" class="primary" id="generate">إنشاء / تحديث التقرير</button><button type="button" class="soft" id="reset">مسح بيانات القسم الحالي</button></div><label for="result" style="margin-top:12px">معاينة التقرير (جاهز للنسخ والواتساب)</label><textarea id="result" readonly placeholder="اضغط إنشاء التقرير لعرض النص هنا"></textarea><div class="actions"><button type="button" class="primary" id="copy">نسخ التقرير</button><button type="button" class="soft" id="share">مشاركة عبر واتساب</button></div></section>
+<footer>إعداد م/ محمد شريف · يعمل محليًا بالكامل دون الحاجة للاتصال بالإنترنت.</footer>
 </main>
 
-
-<!-- ==================== قوائم داتاليست منفصلة تماماً لكل قسم ==================== -->
-
-<!-- 1. قائمة المهندسين (للأعلى حصراً) -->
-<datalist id="engineersList">
-  <option value="م/ محمد شريف">
-  <option value="م/ رضا جعفر">
-  <option value="م/ أحمد أبوشادي">
-  <option value="م/ مصطفى زيدان">
-  <option value="م/ عمر رمضان">
-  <option value="م/ محمد فريد">
-  <option value="م/ سعد سامي">
-  <option value="م/ محمود السيد">
-  <option value="م/ عبدالله مصباح">
-  <option value="م/ محمد رفعت">
-  <option value="م/ عبدالعليم البنا">
-  <option value="م/ عبدالسلام عبدالمنعم">
-  <option value="م/ محمد مخلوف">
-  <option value="م/ عبدالله الشتيوي">
-  <option value="م/ فارس">
-</datalist>
-
-<!-- 2. قوائم قسم التصنيع -->
-<datalist id="m_lineList">
-  <option value="خط المتعدد نفق IQF(2)">
-  <option value="خط المتعدد نفق IQF(1)">
-  <option value="نفق Spiral">
-  <option value="نفق الجايرو">
-  <option value="فرن الباذنجان">
-  <option value="مسار الرمان نفق IQF(1)">
-  <option value="خط الورقيات">
-  <option value="مغسلة الرمان">
-  <option value="بيلر الجزر">
-  <option value="بلانشر المتعدد">
-  <option value="مدرج الفراولة">
-  <option value="سنيبر 1">
-  <option value="سنيبر 2">
-  <option value="سنيبر 3">
-</datalist>
-
-<datalist id="m_productList">
-  <option value="فاصوليا">
-  <option value="فاصوليا خضراء">
-  <option value="جزر">
-  <option value="جزر مكعبات">
-  <option value="باذنجان">
-  <option value="باذنجان مشوى">
-  <option value="باذنجان مجمد">
-  <option value="بابا غنوج 2.5 كجم">
-  <option value="بسلة جافة">
-  <option value="رمان">
-  <option value="رمان حب">
-  <option value="جوافة">
-  <option value="سبانخ">
-  <option value="فراولة">
-</datalist>
-
-<datalist id="m_prepList">
-  <option value="تدريج فراولة">
-  <option value="نقع بسلة جافة">
-  <option value="شطف وتعقيم مدرج الفراولة">
-  <option value="غسيل خط المتعدد">
-  <option value="غسيل خط الورقيات">
-  <option value="غسيل نفق IQF(1)">
-  <option value="غسيل نفق IQF(2)">
-  <option value="غسيل نفق الجايرو ورفعه دراي">
-  <option value="غسيل بيلر الجزر">
-  <option value="غسيل فرن الباذنجان">
-</datalist>
-
-<datalist id="m_machineList">
-  <option value="خط المتعدد نفق IQF(2)">
-  <option value="خط المتعدد نفق IQF(1)">
-  <option value="نفق Spiral">
-  <option value="سنيبر 1">
-  <option value="سنيبر 2">
-  <option value="فرن الباذنجان">
-  <option value="ماكينة التقطيع">
-  <option value="بلانشر المتعدد">
-  <option value="بيلر الجزر">
-</datalist>
-
-<datalist id="m_placeList">
-  <option value="صالة التغذية">
-  <option value="على الرصيف">
-  <option value="داخل الصالة">
-  <option value="داخل الفرن">
-  <option value="على رصيف الفرن">
-  <option value="دبابات باذنجان داخل الصالة">
-  <option value="شفر خارج الصالة">
-  <option value="شفر جزر على الرصيف">
-  <option value="عربية فاصوليا على الرصيف">
-</datalist>
-
-
-<!-- 3. قوائم قسم التعبئة -->
-<datalist id="p_lineList">
-  <option value="اليدوي">
-  <option value="اليدوي + التمرا">
-  <option value="الآلي A">
-  <option value="الآلي B">
-  <option value="الآلي C">
-  <option value="التمرا">
-  <option value="الــMetal Detector">
-  <option value="ماكينة التعبئة الالي A">
-  <option value="ماكينة التعبئة الالي B">
-  <option value="ماكينة التعبئة الالي C">
-</datalist>
-
-<datalist id="p_productList">
-  <option value="ملوخية جرين أيس">
-  <option value="سبانخ هابي فارم">
-  <option value="سبانخ هابي">
-  <option value="خضار مشكل هابي فارم">
-  <option value="خضار مشكل جرين ايس">
-  <option value="خضار جرين أيس">
-  <option value="خضار هابي فارم">
-  <option value="فراولة بيري مارك">
-  <option value="فراولة نيوبيري">
-  <option value="بسلة هابي فارم">
-  <option value="بسلة ساده جرين ايس">
-  <option value="بامية زيرو هابي فارم">
-  <option value="باذنجان جرين أيس">
-  <option value="فاصوليا بيري مارك">
-</datalist>
-
-<datalist id="p_machineList">
-  <option value="الماكينة الآلي A">
-  <option value="الماكينة الآلي B">
-  <option value="الماكينة الآلي C">
-  <option value="التمرا">
-  <option value="ريبون الطباعة">
-  <option value="التايم بوكس">
-  <option value="سير التغذية">
-  <option value="سحب الرول">
-  <option value="لحام الاكياس">
-  <option value="تفلون اللحام">
-</datalist>
-
-<datalist id="p_washList">
-  <option value="الآلي A">
-  <option value="الآلي B">
-  <option value="الآلي C">
-  <option value="التمرا والترابيزات الخاصة بها">
-  <option value="شطف وتعقيم ماكينة A">
-  <option value="شطف وتعقيم ماكينة C">
-  <option value="تفويم وغسيل ماكينة B">
-</datalist>
-
+<datalist id="engineersList"><option value="م/ محمد شريف"><option value="م/ أحمد علي"><option value="م/ رضا جعفر"><option value="م/ أحمد أبوشادي"><option value="م/ مصطفى زيدان"><option value="م/ عمر رمضان"><option value="م/ محمد فريد"><option value="م/ سعد سامي"><option value="م/ محمود السيد"><option value="م/ عبدالله مصباح"><option value="م/ محمد رفعت"><option value="م/ عبدالعليم البنا"><option value="م/ عبدالسلام عبدالمنعم"><option value="م/ محمد مخلوف"><option value="م/ عبدالله الشتيوي"><option value="م/ فارس"></datalist>
+<datalist id="m_lineList"><option value="خط المتعدد نفق IQF(2)"><option value="خط المتعدد نفق IQF(1)"><option value="نفق Spiral"><option value="نفق الجايرو"><option value="فرن الباذنجان"><option value="مسار الرمان نفق IQF(1)"><option value="خط الورقيات"><option value="مغسلة الرمان"><option value="بيلر الجزر"><option value="بلانشر المتعدد"><option value="مدرج الفراولة"><option value="سنيبر 1"><option value="سنيبر 2"><option value="سنيبر 3"></datalist>
+<datalist id="m_productList"><option value="فاصوليا"><option value="فاصوليا خضراء"><option value="جزر"><option value="جزر مكعبات"><option value="باذنجان"><option value="باذنجان مشوى"><option value="باذنجان مجمد"><option value="بابا غنوج 2.5 كجم"><option value="بسلة جافة"><option value="رمان"><option value="رمان حب"><option value="جوافة"><option value="سبانخ"><option value="فراولة"></datalist>
+<datalist id="m_prepList"><option value="تدريج فراولة"><option value="نقع بسلة جافة"><option value="شطف وتعقيم مدرج الفراولة"><option value="غسيل خط المتعدد"><option value="غسيل خط الورقيات"><option value="غسيل نفق IQF(1)"><option value="غسيل نفق IQF(2)"><option value="غسيل نفق الجايرو ورفعه دراي"><option value="غسيل بيلر الجزر"><option value="غسيل فرن الباذنجان"></datalist>
+<datalist id="m_machineList"><option value="خط المتعدد نفق IQF(2)"><option value="خط المتعدد نفق IQF(1)"><option value="نفق Spiral"><option value="سنيبر 1"><option value="سنيبر 2"><option value="فرن الباذنجان"><option value="ماكينة التقطيع"><option value="بلانشر المتعدد"><option value="بيلر الجزر"></datalist>
+<datalist id="m_placeList"><option value="صالة التغذية"><option value="على الرصيف"><option value="داخل الصالة"><option value="داخل الفرن"><option value="على رصيف الفرن"><option value="دبابات باذنجان داخل الصالة"><option value="شفر خارج الصالة"><option value="شفر جزر على الرصيف"><option value="عربية فاصوليا على الرصيف"></datalist>
+<datalist id="p_lineList"><option value="اليدوي"><option value="اليدوي + التمرا"><option value="الآلي A"><option value="الآلي B"><option value="الآلي C"><option value="التمرا"><option value="الــMetal Detector"></datalist>
+<datalist id="p_productList"><option value="ملوخية جرين أيس"><option value="سبانخ هابي فارم"><option value="سبانخ هابي"><option value="خضار مشكل هابي فارم"><option value="خضار مشكل جرين أيس"><option value="خضار جرين أيس"><option value="خضار هابي فارم"><option value="فراولة بيري مارك"><option value="فراولة نيوبيري"><option value="بسلة هابي فارم"><option value="بسلة ساده جرين أيس"><option value="بامية زيرو هابي فارم"><option value="باذنجان جرين أيس"><option value="فاصوليا بيري مارك"></datalist>
+<datalist id="p_machineList"><option value="الماكينة الآلي A"><option value="الماكينة الآلي B"><option value="الماكينة الآلي C"><option value="التمرا"><option value="ريبون الطباعة"><option value="التايم بوكس"><option value="سير التغذية"><option value="سحب الرول"><option value="لحام الأكياس"><option value="تفلون اللحام"></datalist>
+<datalist id="p_washList"><option value="الآلي A"><option value="الآلي B"><option value="الآلي C"><option value="التمرا والترابيزات الخاصة بها"><option value="شطف وتعقيم ماكينة A"><option value="شطف وتعقيم ماكينة C"><option value="تفويم وغسيل ماكينة B"></datalist>
 
 <script>
 (function(){
-"use strict";
-const $=id=>document.getElementById(id);
-let activeSection = "manufacturing";
-
-// حضور التصنيع (شامل م/ محمد شريف)
-const m_people = [
-  "م/ محمد شريف", "م/ رضا جعفر", "م/ أحمد أبوشادي", "م/ مصطفى زيدان", "م/ عمر رمضان",
-  "م/ محمد فريد", "م/ سعد سامى", "م/ محمود السيد", "م/ عبدالله مصباح", "م/ محمد رفعت",
-  "أ/ نشات علي", "أ/ محمد عزام", "أ/ محمد مسعد", "أ/ محمد الصاوي", "أ/ مصطفي سعيد",
-  "أ/عماد محمد", "أ/احمد لطفي", "أ/حسام ابو الحديد", "أ/حسام زيدان", "أ/على محمد على",
-  "أ/ أحمد الشيخ", "أ/ فشكل", "أ/ اشرف سليمان", "أ/ عبدالرحمن ياسر", "أ/ حسام", "أ/ اسماعيل مشحوت", "أ/اسماعيل مرعي"
-];
-
-// حضور التعبئة (شامل م/ محمد شريف)
-const p_people = [
-  "م/ محمد شريف", "م/ عبدالعليم البنا", "م/ عبدالسلام عبدالمنعم", "م/ محمد مخلوف", "م/ عبدالله الشتيوي",
-  "م/ عبدالعليم", "م/ فارس", "م/ عبد السلام", "أ/ عمرو أحمد", "أ/ السيد ابو المجد",
-  "أ/ عماد حبيب", "أ/ محمد حمدي", "أ/ ام محمد", "أحمد علي", "عمران", "يوسف"
-];
-
-window.switchSection = function(sec){
-  activeSection = sec;
-  if(sec === "manufacturing"){
-    $("tabManufacturing").classList.add("active");
-    $("tabPackaging").classList.remove("active");
-    $("manufacturingBlock").classList.add("active-block");
-    $("packagingBlock").classList.remove("active-block");
-    $("currentSection").value = "التصنيع";
-  } else {
-    $("tabPackaging").classList.add("active");
-    $("tabManufacturing").classList.remove("active");
-    $("packagingBlock").classList.add("active-block");
-    $("manufacturingBlock").classList.remove("active-block");
-    $("currentSection").value = "التعبئة";
-  }
-};
-
-function renderAttendance(containerId, peopleArray){
-  const container = $(containerId);
-  container.innerHTML = "";
-  peopleArray.forEach((name)=>{
-    const label = document.createElement("label");
-    label.className = "checkbox-item";
-    const cb = document.createElement("input");
-    cb.type = "checkbox";
-    cb.value = name;
-    const span = document.createElement("span");
-    span.textContent = name;
-    label.append(cb, span);
-    container.append(label);
-  });
-}
-
+"use strict";const $=id=>document.getElementById(id);let activeSection="manufacturing";
+const mPeople=["م/ محمد شريف","م/ أحمد علي","م/ رضا جعفر","م/ أحمد أبوشادي","م/ مصطفى زيدان","م/ عمر رمضان","م/ محمد فريد","م/ سعد سامي","م/ محمود السيد","م/ عبدالله مصباح","م/ محمد رفعت","أ/ نشات علي","أ/ محمد عزام","أ/ محمد مسعد","أ/ محمد الصاوي","أ/ مصطفي سعيد","أ/عماد محمد","أ/احمد لطفي","أ/حسام ابو الحديد","أ/حسام زيدان","أ/على محمد على","أ/ أحمد الشيخ","أ/ فشكل","أ/ اشرف سليمان","أ/ عبدالرحمن ياسر","أ/ حسام","أ/ اسماعيل مشحوت","أ/اسماعيل مرعي"];
+const pPeople=["م/ محمد شريف","م/ أحمد علي","م/ عبدالعليم البنا","م/ عبدالسلام عبدالمنعم","م/ محمد مخلوف","م/ عبدالله الشتيوي","م/ عبدالعليم","م/ فارس","م/ عبد السلام","أ/ عمرو أحمد","أ/ السيد ابو المجد","أ/ عماد حبيب","أ/ محمد حمدي","أ/ ام محمد","عمران","يوسف"];
+window.switchSection=sec=>{activeSection=sec;const m=sec==="manufacturing";$("tabManufacturing").classList.toggle("active",m);$("tabPackaging").classList.toggle("active",!m);$("manufacturingBlock").style.display=m?"block":"none";$("packagingBlock").style.display=m?"none":"block";$("currentSection").value=m?"التصنيع":"التعبئة";};
+function setupTabs(navId){$(navId).addEventListener("click",e=>{const b=e.target.closest("button[data-panel]");if(!b)return;const nav=$(navId),parent=nav.parentElement;nav.querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));parent.querySelectorAll(":scope > .tab-panel").forEach(p=>p.classList.toggle("active",p.id===b.dataset.panel));});}
+setupTabs("mTabs");setupTabs("pTabs");setupTabs("mProductionTabs");
+function attendance(id,arr){const c=$(id);arr.forEach(n=>{const l=document.createElement("label");l.className="checkbox-item";const i=document.createElement("input");i.type="checkbox";i.value=n;const s=document.createElement("span");s.textContent=n;l.append(i,s);c.append(l);});}
+attendance("m_attendanceContainer",mPeople);attendance("p_attendanceContainer",pPeople);
 const D={
-  m_line:{
-    title:"خط / نفق (تصنيع)",
-    fields:[
-      ["name","اسم الخط / النفق","list","m_lineList","full"],
-      ["in","حالة الاستلام","select",["شغال","متوقف","جاهز للتشغيل","تحت الغسيل"]],
-      ["out","حالة التسليم","select",["شغال","متوقف","جاهز للتشغيل","تحت الغسيل"]],
-      ["start","وقت بدء التشغيل","time"],
-      ["stop","وقت التوقف","time"],
-      ["times","تفاصيل وملاحظات التشغيل","text","مثال: عند وصول الخام وتركيب السيور","full"]
-    ]
-  },
-  m_quantity:{
-    title:"بند كمية (استلام / تصنيع)",
-    fields:[
-      ["name","اسم الخام / المنتج","list","m_productList","full"],
-      ["location","النفق / المسار","list","m_lineList"],
-      ["qty","الكمية","number"],
-      ["unit","الوحدة","select",["كجم","طن","برميل","عربية","دبابة","شفر","عدد"]],
-      ["note","ملاحظات إضافية","text","مثال: مكعبات / مشوي / قطع","full"]
-    ]
-  },
-  m_prep:{
-    title:"عملية تجهيز / نقع / تدريج",
-    fields:[
-      ["name","نوع العملية","list","m_prepList","full"],
-      ["qty","الكمية / الوزنة","number"],
-      ["unit","الوحدة","select",["كجم","طن","برميل","حوض"]],
-      ["barrels","عدد البراميل (في حال النقع)","number"],
-      ["chlorine","كمية الكلوروفيل (لتر)","number"],
-      ["note","ملاحظات الاستكمال","text","مثال: استكمال النقع بالأحواض الوردية الثانية","full"]
-    ]
-  },
-  m_fault:{
-    title:"عطل / توقف (تصنيع)",
-    fields:[
-      ["machine","المعدة / الخط","list","m_machineList"],
-      ["start","من الساعة","time"],
-      ["end","إلى الساعة","time"],
-      ["duration","المدة (دقيقة)","number"],
-      ["reason","سبب العطل والتفاصيل","text","مثال: عطل بالجيربوكس الخاص بسنيبر 2","full"]
-    ]
-  },
-  m_stock:{
-    title:"رصيد خام متبقٍ",
-    fields:[
-      ["name","اسم الخام","list","m_productList"],
-      ["qty","الكمية أو العدد","number"],
-      ["unit","الوحدة","select",["كجم","طن","عربية","دبابة","شفر","برميل"]],
-      ["place","مكان التواجد / الموقع","list","m_placeList","full"]
-    ]
-  },
-  m_wash:{
-    title:"غسيل وتطهير وتسليم (تصنيع)",
-    fields:[
-      ["name","الخط / المعدة","list","m_prepList"],
-      ["status","الحالة والتسليم","select",["تم الغسيل والتسليم للجودة","تم الغسيل في دورة ADF","تم الغسيل ورفعه دراي","تحت الغسيل","جاهز للتشغيل"]],
-      ["details","تفاصيل إضافية","text","اختياري","full"]
-    ]
-  },
-
-  p_line:{
-    title:"خط تعبئة / أمر شغل",
-    fields:[
-      ["lineName","اسم الخط / الماكينة","list","p_lineList"],
-      ["product","اسم المنتج","list","p_productList"],
-      ["orderNo","رقم أمر الشغل","text","مثال: 430/19"],
-      ["doneQty","الكراتين المنفذة (تم عمل)","number"],
-      ["remQty","الكراتين المتبقية","number"],
-      ["isFinished","حالة أمر الشغل","select",["متبقي كراتين","تم الإنتهاء منها ✅","تم التشغيل فقط"]],
-      ["workers","عدد العمال للخط","number"],
-      ["startTime","وقت بدء التشغيل","time"],
-      ["endTime","وقت التوقف / الانتهاء","time"],
-      ["notes","ملاحظات التشغيل وأسباب التوقف","text","مثال: بعد خروج الخام حتي خروج عمال السهرة","full"]
-    ]
-  },
-  p_fault:{
-    title:"عطل / توقف خط التعبئة",
-    fields:[
-      ["line","الماكينة / الخط","list","p_lineList"],
-      ["duration","مدة التوقف (بالدقائق)","number"],
-      ["reason","سبب العطل والتفاصيل","text","مثال: مشكلة في ريبون الطباعة / عيوب لحام","full"]
-    ]
-  },
-  p_wash:{
-    title:"غسيل وتجهيز ماكينة تعبئة",
-    fields:[
-      ["line","الماكينة / الخط","list","p_washList"],
-      ["status","الحالة","select",["تم الغسيل والتسليم للجودة وتعقيمها وجاهزة للعمل","تم الغسيل والتسليم للجودة","تم شطف وتعقيم وجاهزة للتشغيل","جاري الاستكمال بالوردية التالية"]],
-      ["notes","ملاحظات الغسيل والترابيزات","text","اختياري","full"]
-    ]
-  }
+m_line:{title:"خط / نفق (تصنيع)",fields:[["name","اسم الخط / النفق","list","m_lineList","full"],["in","حالة الاستلام","select",["شغال","متوقف","جاهز للتشغيل","تحت الغسيل"]],["out","حالة التسليم","select",["شغال","متوقف","جاهز للتشغيل","تحت الغسيل"]],["start","وقت بدء التشغيل","time"],["stop","وقت التوقف","time"],["times","تفاصيل وملاحظات التشغيل","text","ملاحظات التشغيل","full"]]},
+m_quantity:{title:"بند كمية (استلام / تصنيع)",fields:[["name","اسم الخام / المنتج","list","m_productList","full"],["location","النفق / المسار","list","m_lineList"],["qty","الكمية","number"],["unit","الوحدة","select",["كجم","طن","برميل","عربية","دبابة","شفر","عدد"]],["note","ملاحظات إضافية","text","تفاصيل إضافية","full"]]},
+m_prep:{title:"عملية تجهيز / نقع / تدريج",fields:[["name","نوع العملية","list","m_prepList","full"],["qty","الكمية / الوزنة","number"],["unit","الوحدة","select",["كجم","طن","برميل","حوض"]],["barrels","عدد البراميل","number"],["chlorine","كمية الكلوروفيل (لتر)","number"],["note","ملاحظات الاستكمال","text","تفاصيل","full"]]},
+m_fault:{title:"عطل / توقف (تصنيع)",fields:[["machine","المعدة / الخط","list","m_machineList"],["start","من الساعة","time"],["end","إلى الساعة","time"],["duration","المدة (دقيقة)","number"],["reason","سبب العطل والتفاصيل","text","سبب العطل","full"]]},
+m_stock:{title:"رصيد خام متبقٍ",fields:[["name","اسم الخام","list","m_productList"],["qty","الكمية أو العدد","number"],["unit","الوحدة","select",["كجم","طن","عربية","دبابة","شفر","برميل"]],["place","مكان التواجد / الموقع","list","m_placeList","full"]]},
+m_wash:{title:"غسيل وتطهير وتسليم (تصنيع)",fields:[["name","الخط / المعدة","list","m_prepList"],["status","الحالة والتسليم","select",["تم الغسيل والتسليم للجودة","تم الغسيل في دورة ADF","تم الغسيل ورفعه دراي","تحت الغسيل","جاهز للتشغيل"]],["details","تفاصيل إضافية","text","اختياري","full"]]},
+p_line:{title:"خط تعبئة / أمر شغل (يمكن تكراره)",fields:[["lineName","اسم الخط / الماكينة","list","p_lineList"],["product","اسم المنتج","list","p_productList"],["orderNo","رقم أمر الشغل","text","مثال: 430/19"],["doneQty","الكراتين المنفذة","number"],["remQty","الكراتين المتبقية","number"],["isFinished","حالة أمر الشغل","select",["متبقي كراتين","تم الانتهاء منها","تم التشغيل فقط"]],["workers","عدد العمال للخط","number"],["startTime","وقت بدء التشغيل","time"],["endTime","وقت التوقف / الانتهاء","time"],["notes","ملاحظات التشغيل وأسباب التوقف","text","تفاصيل التشغيل والتحويل والتوقف","full"]]},
+p_fault:{title:"عطل / توقف خط التعبئة",fields:[["line","الماكينة / الخط","list","p_lineList"],["duration","مدة التوقف (بالدقائق)","number"],["start","وقت بداية التوقف","time"],["end","وقت نهاية التوقف","time"],["reason","سبب العطل والتفاصيل","text","سبب العطل","full"]]},
+p_wash:{title:"غسيل وتجهيز ماكينة تعبئة",fields:[["line","الماكينة / الخط","list","p_washList"],["status","الحالة","select",["تم الغسيل والتسليم للجودة وتعقيمها وجاهزة للعمل","تم الغسيل والتسليم للجودة","تم شطف وتعقيم وجاهزة للتشغيل","جاري الاستكمال بالوردية التالية"]],["notes","ملاحظات الغسيل والترابيزات","text","تفاصيل إضافية","full"]]}
 };
-
-window.addRow = function(containerId, kind){
-  const spec=D[kind], row=document.createElement("div");
-  row.className="item";
-  const head=document.createElement("div"); head.className="itemhead";
-  const title=document.createElement("span"); title.textContent=spec.title;
-  const del=document.createElement("button"); del.type="button"; del.className="del"; del.textContent="حذف ×";
-  del.addEventListener("click",()=>row.remove());
-  head.append(title,del); row.append(head);
-
-  const fields=document.createElement("div"); fields.className="fields";
-  spec.fields.forEach(([key,label,type,opts,cls])=>{
-    const wrap=document.createElement("div");
-    if(cls==="full") wrap.className="full";
-    const lab=document.createElement("label"); lab.textContent=label; wrap.append(lab);
-    let el;
-    if(type==="select"){
-      el=document.createElement("select");
-      const empty=document.createElement("option"); empty.value=""; empty.textContent="— اختر —"; el.append(empty);
-      opts.forEach(v=>{const o=document.createElement("option"); o.value=v; o.textContent=v; el.append(o)});
-    } else if(type==="list"){
-      el=document.createElement("input"); el.setAttribute("list",opts); el.placeholder="اختر أو اكتب...";
-    } else {
-      el=document.createElement("input"); el.type=type;
-      if(type==="time") el.step="60";
-      if(type==="number"){el.min="0"; el.step="any"}
-      if(type==="text") el.placeholder=opts||"";
-    }
-    el.dataset.key=key; wrap.append(el); fields.append(wrap);
-  });
-  row.append(fields); $(containerId).append(row);
-};
-
-function rows(id){
-  return Array.from($(id).querySelectorAll(".item")).map(r=>{
-    const o={}; r.querySelectorAll("[data-key]").forEach(e=>o[e.dataset.key]=e.value.trim()); return o;
-  }).filter(o=>Object.values(o).some(Boolean));
+window.addRow=(cid,kind)=>{const spec=D[kind],r=document.createElement("div");r.className="item";const h=document.createElement("div");h.className="itemhead";const t=document.createElement("span");t.textContent=spec.title;const del=document.createElement("button");del.type="button";del.className="del";del.textContent="حذف ×";del.onclick=()=>r.remove();h.append(t,del);r.append(h);const fs=document.createElement("div");fs.className="fields";spec.fields.forEach(([key,label,type,opts,cls])=>{const w=document.createElement("div");if(cls==="full")w.className="full";const l=document.createElement("label");l.textContent=label;w.append(l);let el;if(type==="select"){el=document.createElement("select");const z=document.createElement("option");z.value="";z.textContent="— اختر —";el.append(z);opts.forEach(v=>{const o=document.createElement("option");o.value=v;o.textContent=v;el.append(o);});}else{el=document.createElement("input");el.type=type;if(type==="list"){el.setAttribute("list",opts);el.placeholder="اختر أو اكتب...";}if(type==="time")el.step="60";if(type==="number"){el.min="0";el.step="any";}if(type==="text")el.placeholder=opts||"";}el.dataset.key=key;w.append(el);fs.append(w);});r.append(fs);$(cid).append(r);};
+function rows(id){return Array.from($(id).querySelectorAll(".item")).map(r=>{const o={};r.querySelectorAll("[data-key]").forEach(e=>o[e.dataset.key]=e.value.trim());return o;}).filter(o=>Object.values(o).some(Boolean));}
+const v=id=>$(id).value.trim();const date=()=>{if(!v("day"))return"";const [y,m,d]=v("day").split("-");return `${d}/${m}/${y}`;};
+function checked(id){return Array.from(document.querySelectorAll(`#${id} input:checked`)).map(x=>x.value);}
+function extras(id){return v(id).split(/[,\n]+/).map(x=>x.trim()).filter(Boolean);}
+function make(){let s="",d=date(),shift=v("shift")||"الأولى";
+if(activeSection==="manufacturing"){
+s+="🔹بسم الله الرحمن الرحيم🔹\n"+`🔹تقرير الورديه ${shift}\n`+`🔹عن يوم ${d}\n\n`;
+const lines=rows("m_lineRows");if(lines.length){lines.forEach(x=>{if(!x.name)return;s+=`⬅️${x.name}\n`;let a=[];if(x.in)a.push(`تم استلام الخط ${x.in}`);if(x.start)a.push(`والتشغيل الساعة ${x.start}`);if(x.stop)a.push(`والتوقف الساعة ${x.stop}`);if(x.out)a.push(`والتسليم ${x.out}`);if(x.times)a.push(x.times);s+=`- ${a.join(" ")}\n\n`;});}
+const rec=rows("m_receivedRows");if(rec.length){s+="⬅️الاستلام\n";rec.forEach(x=>s+=`• ${x.name||"خام"} = ${x.qty||"0"} ${x.unit||"كجم"}${x.note?" ("+x.note+")":""}\n`);s+="\n";}
+const made=rows("m_madeRows");if(made.length){s+="⬅️التصنيع\n";made.forEach(x=>{if(x.location)s+=`🔹${x.location}\n`;s+=`- ${x.name||"منتج"} = ${x.qty||"0"} ${x.unit||"كجم"}${x.note?" ("+x.note+")":""}\n`;});s+="\n";}
+rows("m_prepRows").forEach(x=>{if(x.name&&x.name.includes("تدريج"))s+=`⬅️التدريج\n- تم تدريج ${x.qty||"0"} ${x.unit||"كجم"} ${x.name.replace("تدريج","").trim()}\n${x.note||""}\n\n`;else if(x.name&&x.name.includes("نقع"))s+=`⬅️نقع البسلة\n- تم نقع ${x.barrels?"عدد "+x.barrels+" برميل":""} ${x.name} بكمية ${x.qty||"0"} ${x.unit||"طن"}\n${x.chlorine?"- وكمية كلوروفيل "+x.chlorine+" لتر\n":""}${x.note||""}\n\n`;else s+=`⬅️${x.name||"تجهيز"}\n- الكمية: ${x.qty||"0"} ${x.unit||"كجم"}. ${x.note||""}\n\n`;});
+const faults=rows("m_faultRows");if(faults.length){s+="⬅️الأعطال والتوقفات\n";faults.forEach(x=>s+=`- توقف ${x.machine||"المعدة"} ${x.start&&x.end?`من الساعة ${x.start} إلى الساعة ${x.end}`:x.start?`الساعة ${x.start}`:""} ${x.duration?"("+x.duration+" دقيقة)":""} ${x.reason?"بسبب "+x.reason:""}\n`);s+="\n";}
+const stock=rows("m_stockRows");if(stock.length){s+="⬅️الخام المتبقي\n";stock.forEach(x=>s+=`- يوجد ${x.qty||""} ${x.unit||"كجم"} ${x.name||""} ${x.place||""}\n`);s+="\n";}
+const wash=rows("m_washRows");if(wash.length){s+="⬅️الغسيل\n";wash.forEach(x=>s+=`- ${x.name||"تم غسيل الخط"} (${x.status||"تم الغسيل"}) ${x.details||""}\n`);s+="\n";}
+if(v("m_quality"))s+=`- حالة التسليم للجودة: ${v("m_quality")}\n`;if(v("m_notes"))s+=`\nملاحظات الوردية:\n${v("m_notes")}\n`;
+let people=[...checked("m_attendanceContainer"),...extras("m_customAttendees")];if(v("engineer")||people.length){s+="\nحضور الوردية\n";if(v("engineer"))s+=v("engineer")+"\n";people.forEach(n=>{if(n!==v("engineer"))s+=`- ${n}\n`;});}
+}else{
+s+="*بسم الله الرحمن الرحيم*\n"+`*تقرير التعبئة الوردية ${shift}*\n`+`*${d}*\nـــــــــــــــــــــــــــــــــــــــ\n`;
+const lines=rows("p_lineRows");let current="";lines.forEach(x=>{if(x.lineName&&x.lineName!==current){current=x.lineName;s+=`*${current}*\n`;}else if(!x.lineName&&!current){current="خط التعبئة";s+=`*${current}*\n`;}
+if(x.product)s+=`• ${x.product}.\n`;if(x.orderNo)s+=`• أمر شغل ${x.orderNo}.\n`;if(x.doneQty)s+=`• تم عمل ${x.doneQty} كرتونة.\n`;if(x.isFinished==="تم الانتهاء منها")s+="• وتم الانتهاء منها.\n";else if(x.remQty)s+=`• متبقي ${x.remQty} كرتونة.\n`;if(x.startTime||x.endTime||x.notes){let p=[];if(x.startTime)p.push(`بداية التشغيل الساعة ${x.startTime}`);if(x.endTime)p.push(`حتى الساعة ${x.endTime}`);if(x.notes)p.push(x.notes);s+=`• ${p.join("، ")}.\n`;}if(x.workers)s+=`• عدد العمال = ${x.workers} عامل.\n`;s+="\n";});
+const faults=rows("p_faultRows");if(faults.length){s+="*الأعطال والتوقفات*\n";faults.forEach((x,i)=>s+=`${i+1}- توقف ${x.line||"الماكينة"} ${x.start&&x.end?`من ${x.start} إلى ${x.end}`:""} ${x.duration?"لمدة "+x.duration+" دقيقة":""} ${x.reason?"بسبب "+x.reason:""}.\n`);s+="ـــــــــــــــــــــــــــــــــــــــ\n";}
+const washes=rows("p_washRows");if(washes.length){s+="*الغسيل والتجهيز*\n";washes.forEach((x,i)=>s+=`${i+1}- ${x.line||"الماكينة"}: ${x.status||"تم الغسيل"} ${x.notes?"("+x.notes+")":""}.\n`);s+="ـــــــــــــــــــــــــــــــــــــــ\n";}
+let stats=[];if(v("p_handWorkers"))stats.push(`- ${v("p_handWorkers")} (هاند + مستلزمات + تسجيل).`);if(v("p_startWorkers"))stats.push(`- عدد العمال من بداية الوردية = ${v("p_startWorkers")} عامل.`);if(v("p_nightWorkers"))stats.push(`- عدد عمال السهرة = ${v("p_nightWorkers")} عامل.`);if(v("p_metalWorkers"))stats.push(`- ${v("p_metalWorkers")}.`);if(v("p_laborNotes"))stats.push(v("p_laborNotes"));if(stats.length)s+=stats.join("\n")+"\nـــــــــــــــــــــــــــــــــــــــ\n";
+s+="*حضور الوردية*\n";if(v("engineer"))s+=`*${v("engineer")}*\n`;[...checked("p_attendanceContainer"),...extras("p_customAttendees")].forEach(n=>{if(n!==v("engineer"))s+=`*${n}*\n`;});
 }
-
-function v(id){return $(id).value ? $(id).value.trim() : "";}
-
-function formatDate(dateStr){
-  if(!dateStr) return "";
-  const [y,m,d]=dateStr.split("-");
-  return `${d}/${m}/${y}`;
-}
-
-function make(){
-  let dVal = formatDate(v("day"));
-  let s = "";
-
-  if(activeSection === "manufacturing"){
-    s += "🔹بسم الله الرحمن الرحيم🔹\n";
-    s += `🔹تقرير الورديه ${v("shift")||"الأولى"}\n`;
-    s += `🔹عن يوم ${dVal}\n\n`;
-
-    let lines = rows("m_lineRows");
-    if(lines.length){
-      lines.forEach(x=>{
-        if(!x.name) return;
-        s += `⬅️${x.name}\n`;
-        let parts = [];
-        if(x.in) parts.push(`تم استلام الخط ${x.in}`);
-        if(x.start) parts.push(`والتشغيل الساعه ${x.start}`);
-        if(x.stop) parts.push(`والتوقف الساعة ${x.stop}`);
-        if(x.out) parts.push(`والتسليم ${x.out}`);
-        if(x.times) parts.push(x.times);
-        s += `- ${parts.join(" ")}\n\n`;
-      });
-    }
-
-    let rec = rows("m_receivedRows");
-    if(rec.length){
-      s += "⬅️الاستلام\n";
-      rec.forEach(x=>{
-        s += `• ${x.name || "خام"} = ${x.qty || "0"} ${x.unit || "كجم"}${x.note ? " ("+x.note+")" : ""}\n`;
-      });
-      s += "\n";
-    }
-
-    let mades = rows("m_madeRows");
-    if(mades.length){
-      s += "⬅️التصنيع\n";
-      mades.forEach(x=>{
-        if(x.location) s += `🔹${x.location}\n`;
-        s += `- ${x.name || "منتج"} = ${x.qty || "0"} ${x.unit || "كجم"}${x.note ? " ("+x.note+")" : ""}\n`;
-      });
-      s += "\n";
-    }
-
-    let preps = rows("m_prepRows");
-    if(preps.length){
-      preps.forEach(x=>{
-        if(x.name && x.name.includes("تدريج")){
-          s += "⬅️التدريج\n";
-          s += `- تم تدريج ${x.qty || "0"} ${x.unit || "كجم"} ${x.name.replace("تدريج","").trim()}\n`;
-          if(x.note) s += `- ${x.note}\n`;
-          s += "\n";
-        } else if(x.name && x.name.includes("نقع")){
-          s += "⬅️نقع البسلة\n";
-          s += `- تم نقع ${x.barrels ? "عدد "+x.barrels+" برميل" : ""} ${x.name} بكمية ${x.qty || "0"} ${x.unit || "طن"}\n`;
-          if(x.chlorine) s += `- وكمية كلوروفيل ${x.chlorine} لتر.\n`;
-          if(x.note) s += `- ${x.note}\n`;
-          s += "\n";
-        } else {
-          s += `⬅️${x.name || "تجهيز"}\n`;
-          s += `- الكمية: ${x.qty || "0"} ${x.unit || "كجم"}. ${x.note || ""}\n\n`;
-        }
-      });
-    }
-
-    let faults = rows("m_faultRows");
-    if(faults.length){
-      s += "⬅️الأعطال والتوقفات\n";
-      faults.forEach(x=>{
-        let timeText = (x.start && x.end) ? `من الساعة ${x.start} الي الساعة ${x.end}` : (x.start ? `الساعة ${x.start}` : "");
-        s += `- توقف ${x.machine || "المعدة"} ${timeText} ${x.duration ? "("+x.duration+" دقيقة)" : ""} ${x.reason ? "بسبب "+x.reason : ""}\n`;
-      });
-      s += "\n";
-    }
-
-    let stocks = rows("m_stockRows");
-    if(stocks.length){
-      s += "⬅️الخام المتبقي\n";
-      stocks.forEach(x=>{
-        s += `- يوجد ${x.qty || ""} ${x.unit || "كجم"} ${x.name || ""} ${x.place ? x.place : ""}\n`;
-      });
-      s += "\n";
-    }
-
-    let washes = rows("m_washRows");
-    if(washes.length){
-      s += "⬅️الغسيل\n";
-      washes.forEach(x=>{
-        s += `- ${x.name ? x.name : "تم غسيل الخط"} (${x.status || "تم الغسيل"}) ${x.details ? "– "+x.details : ""}\n`;
-      });
-      s += "\n";
-    }
-
-    if(v("m_quality")) s += `- حالة التسليم للجودة: ${v("m_quality")}\n`;
-    if(v("m_notes")) s += `\nملاحظات الوردية:\n${v("m_notes")}\n`;
-
-    let checkedNames = Array.from(document.querySelectorAll('#m_attendanceContainer input[type="checkbox"]:checked')).map(cb => cb.value);
-    let customText = v("m_customAttendees");
-    if(customText){
-      let extra = customText.split(/[\n,]+/).map(n=>n.trim()).filter(Boolean);
-      checkedNames = checkedNames.concat(extra);
-    }
-    if(v("engineer") || checkedNames.length > 0){
-      s += "\nحضور الورديه\n";
-      if(v("engineer")) s += `${v("engineer")}\n`;
-      checkedNames.forEach(name => { if(name !== v("engineer")) s += `- ${name}\n`; });
-    }
-
-  } else {
-    s += "*بسم الله الرحمن الرحيم*\n";
-    s += `*تقرير التعبئة الورديه ${v("shift")||"الثانية"}*\n`;
-    s += `*${dVal}*\n`;
-    s += "ـــــــــــــــــــــــــــــــــــــــ\n";
-
-    let pLines = rows("p_lineRows");
-    if(pLines.length){
-      pLines.forEach((x)=>{
-        s += `*${x.lineName || "الخط"}*\n`;
-        if(x.product) s += `• ${x.product}.\n`;
-        if(x.orderNo) s += `• أمر شغل ${x.orderNo}.\n`;
-        if(x.doneQty) s += `• تم عمل ${x.doneQty} كرتونة.\n`;
-        
-        if(x.isFinished === "تم الإنتهاء منها ✅") {
-          s += `• وتم الإنتهاء منها ✅.\n`;
-        } else if(x.remQty) {
-          s += `• متبقي ${x.remQty} كرتونة.\n`;
-        }
-
-        let runParts = [];
-        if(x.startTime) runParts.push(`الساعة ${x.startTime}`);
-        if(x.notes) runParts.push(x.notes);
-        if(x.endTime) runParts.push(`حتي الساعة ${x.endTime}`);
-        if(runParts.length) s += `• تم التشغيل ${runParts.join(" ")}.\n`;
-
-        if(x.workers) s += `• 👷🏻‍♂️ عدد العمال = ${x.workers} عمال.\n`;
-        s += "ـــــــــــــــــــــــــــــــــــــــ\n";
-      });
-    }
-
-    let pFaults = rows("p_faultRows");
-    if(pFaults.length){
-      s += "*الأعطال*\n";
-      pFaults.forEach((x, i)=>{
-        s += `${i+1}- توقف ${x.line || "الماكينة"} ${x.duration ? "لمدة "+x.duration+" دقيقة" : ""} ${x.reason ? "بسبب "+x.reason : ""}.\n`;
-      });
-      s += "ـــــــــــــــــــــــــــــــــــــــ\n";
-    }
-
-    let pWashes = rows("p_washRows");
-    if(pWashes.length){
-      s += "*الغسيل والتجهيز*\n";
-      pWashes.forEach((x, i)=>{
-        s += `${i+1}- ${x.line || "الماكينة"}: ${x.status || "تم الغسيل"} ${x.notes ? "("+x.notes+")" : ""}.\n`;
-      });
-      s += "ـــــــــــــــــــــــــــــــــــــــ\n";
-    }
-
-    let laborStats = [];
-    if(v("p_handWorkers")) laborStats.push(`* ${v("p_handWorkers")}.`);
-    if(v("p_startWorkers")) laborStats.push(`* عدد العمال من بداية الوردية = ${v("p_startWorkers")} عامل.`);
-    if(v("p_nightWorkers")) laborStats.push(`* عدد عمال السهرة = ${v("p_nightWorkers")} عامل.`);
-    if(v("p_metalWorkers")) laborStats.push(`* ${v("p_metalWorkers")}.`);
-    if(v("p_laborNotes")) laborStats.push(v("p_laborNotes"));
-    
-    if(laborStats.length){
-      s += laborStats.join("\n") + "\n";
-      s += "ـــــــــــــــــــــــــــــــــــــــ\n";
-    }
-
-    let pChecked = Array.from(document.querySelectorAll('#p_attendanceContainer input[type="checkbox"]:checked')).map(cb => cb.value);
-    let pCustom = v("p_customAttendees");
-    if(pCustom){
-      let extra = pCustom.split(/[\n,]+/).map(n=>n.trim()).filter(Boolean);
-      pChecked = pChecked.concat(extra);
-    }
-
-    s += "*حضور الوردية*\n";
-    if(v("engineer")) s += `*${v("engineer")}*\n`;
-    pChecked.forEach(name => {
-      if(name !== v("engineer")) s += `*${name}*\n`;
-    });
-  }
-
-  $("result").value = s.trim();
-  return s.trim();
-}
-
-$("generate").addEventListener("click", make);
-
-$("copy").addEventListener("click", async()=>{
-  const txt=$("result").value||make();
-  try{
-    await navigator.clipboard.writeText(txt);
-    alert("تم نسخ تقرير الوردية بنجاح! يمكنك لصقه بالواتساب.");
-  }catch(e){
-    $("result").focus(); $("result").select();
-    try{ document.execCommand("copy"); alert("تم نسخ التقرير!"); }
-    catch(err){ alert("يرجى نسخ النص يدويًا من الخانة."); }
-  }
-});
-
-$("share").addEventListener("click", async()=>{
-  const txt=$("result").value||make();
-  if(navigator.share){
-    try{ await navigator.share({title:"تقرير الوردية",text:txt}); }catch(e){}
-  } else {
-    try{ await navigator.clipboard.writeText(txt); }catch(e){}
-    window.open("https://wa.me/","_blank");
-  }
-});
-
-$("reset").addEventListener("click", ()=>{
-  if(!confirm("هل تريد مسح بيانات النموذج الحالي؟")) return;
-  if(activeSection === "manufacturing"){
-    ["m_lineRows","m_receivedRows","m_madeRows","m_prepRows","m_faultRows","m_stockRows","m_washRows"].forEach(id=>$(id).replaceChildren());
-    document.querySelectorAll('#m_attendanceContainer input[type="checkbox"]').forEach(cb=>cb.checked=false);
-    $("m_customAttendees").value = "";
-    seedManufacturing();
-  } else {
-    ["p_lineRows","p_faultRows","p_washRows"].forEach(id=>$(id).replaceChildren());
-    document.querySelectorAll('#p_attendanceContainer input[type="checkbox"]').forEach(cb=>cb.checked=false);
-    ["p_startWorkers","p_nightWorkers","p_handWorkers","p_metalWorkers","p_laborNotes","p_customAttendees"].forEach(id=>$(id).value="");
-    seedPackaging();
-  }
-});
-
-function seedManufacturing(){
-  addRow("m_lineRows","m_line");
-  addRow("m_receivedRows","m_quantity");
-  addRow("m_madeRows","m_quantity");
-  addRow("m_prepRows","m_prep");
-  addRow("m_faultRows","m_fault");
-  addRow("m_stockRows","m_stock");
-  addRow("m_washRows","m_wash");
-}
-
-function seedPackaging(){
-  addRow("p_lineRows","p_line");
-  addRow("p_faultRows","p_fault");
-  addRow("p_washRows","p_wash");
-}
-
-renderAttendance("m_attendanceContainer", m_people);
-renderAttendance("p_attendanceContainer", p_people);
-$("day").value = new Date().toISOString().slice(0,10);
-seedManufacturing();
-seedPackaging();
-
+$("result").value=s.trim();return s.trim();}
+$("generate").onclick=make;
+$("copy").onclick=async()=>{const t=$("result").value||make();try{await navigator.clipboard.writeText(t);alert("تم نسخ التقرير بنجاح.");}catch(e){$("result").focus();$("result").select();try{document.execCommand("copy");alert("تم نسخ التقرير.");}catch(_){alert("انسخ النص يدويًا.");}}};
+$("share").onclick=async()=>{const t=$("result").value||make();if(navigator.share){try{await navigator.share({title:"تقرير الوردية",text:t});}catch(e){}}else{try{await navigator.clipboard.writeText(t);}catch(e){}window.open("https://wa.me/","_blank");}};
+function seedM(){["m_lineRows","m_receivedRows","m_madeRows","m_prepRows","m_faultRows","m_stockRows","m_washRows"].forEach(id=>$(id).replaceChildren());addRow("m_lineRows","m_line");addRow("m_receivedRows","m_quantity");addRow("m_madeRows","m_quantity");addRow("m_prepRows","m_prep");addRow("m_faultRows","m_fault");addRow("m_stockRows","m_stock");addRow("m_washRows","m_wash");}
+function seedP(){["p_lineRows","p_faultRows","p_washRows"].forEach(id=>$(id).replaceChildren());addRow("p_lineRows","p_line");addRow("p_faultRows","p_fault");addRow("p_washRows","p_wash");}
+$("reset").onclick=()=>{if(!confirm("هل تريد مسح بيانات القسم الحالي فقط؟"))return;if(activeSection==="manufacturing"){seedM();["m_quality","m_notes","m_customAttendees"].forEach(id=>$(id).value="");document.querySelectorAll("#m_attendanceContainer input").forEach(x=>x.checked=false);}else{seedP();["p_startWorkers","p_nightWorkers","p_handWorkers","p_metalWorkers","p_laborNotes","p_customAttendees"].forEach(id=>$(id).value="");document.querySelectorAll("#p_attendanceContainer input").forEach(x=>x.checked=false);} $("result").value="";};
+$("day").value=new Date().toISOString().slice(0,10);seedM();seedP();
 })();
 </script>
 </body>
